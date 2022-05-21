@@ -35,7 +35,7 @@ class Util(object):
 
     def get_url(self, feed_name):
         config = configparser.ConfigParser()
-        config.read('app.cfg')
+        config.read('filesnap.cfg')
         url = config['urls'][feed_name]
 
         return url
@@ -44,7 +44,7 @@ class Util(object):
         ts = time.time()
         st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
         config = configparser.ConfigParser()
-        config.read('app.cfg')
+        config.read('filesnap.cfg')
         log_file_path = config['app options']['log_file_location']
         log_file = open(log_file_path, 'a')
         log_file.write("{0}{1}".format(st, "\n"))
