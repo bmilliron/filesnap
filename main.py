@@ -13,6 +13,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 You can email inquiries to sapadian@protonmail.com
 """
+import configparser
+from Util import Util
+
+#Get config
+config = configparser.ConfigParser()
+config.read(filesnap.cfg)
+
+#Set app options
 
 import datetime
 import os
