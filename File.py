@@ -17,36 +17,34 @@ You can email inquiries to sapadian@protonmail.com
 import sys
 import os
 import configparser
-import time
 import datetime
+import shutil
+from Util import Util
+from time import gmtime, strftime
 
 
-class Util(object):
+class File(object):
     '''
-        Performs misc. utility operation
+    The Db performs database operations.
     '''
-
-
     def __init__(self):
         '''
         Constructor
         '''
+        self.logger = Util()
+        self.config = configparser.ConfigParser()
+        self.config.read('filesnap.cfg')
+        self.paths = config['path_config']
+        self.backupdest_path = self.paths['backup_base_dir']
+
+    def backup_file(self, folder, path):
+        backup_folder_name = datetime.datetime.now().strftime("%b_%d_%Y_%H_%M_%S")
+        try:
+            shutil.copy(path, backup_folder_name)
+        except:
+            print("Something went wrong with the copy.")
+        #Check for the folder
+        #create the folder
+        # DO THIS shutil.copy2('/src/dir/file.ext', '/dst/dir/newname.ext') # complete target filename given
 
 
-    def get_url(self, feed_name):
-        config = configparser.ConfigParser()
-        config.read('app.cfg')
-        url = config['urls'][feed_name]
-
-        return url
-
-    def log_op(self, msg):
-        ts = time.time()
-        st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-        config = configparser.ConfigParser()
-        config.read('app.cfg')
-        log_file_path = config['app options']['log_file_location']
-        log_file = open(log_file_path, 'a')
-        log_file.write("{0}{1}".format(st, "\n"))
-        log_file.write("{0}{1}".format(msg, "\n"))
-        log_file.close()

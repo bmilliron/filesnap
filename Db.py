@@ -17,7 +17,7 @@ You can email inquiries to sapadian@protonmail.com
 import sys
 import os
 import sqlite3
-from util import Util
+from Util import Util
 from time import gmtime, strftime
 
 
@@ -25,8 +25,6 @@ class Db(object):
     '''
     The Db performs database operations.
     '''
-
-
     def __init__(self):
         '''
         Constructor
@@ -34,24 +32,42 @@ class Db(object):
         self.conn = sqlite3.connect('filesnap.db')
         self.logger = Util()
 
-    def delete_articles(self):
-        del_conn = self.conn.cursor()
-        del_conn.execute("DELETE FROM NewsLinks")
-        self.conn.commit()
-        del_conn.close()
 
-
-    def insert_article(self, pub_date, article_cat, link_url, link_title):
+    def insert_file_info(self, full_path, modify_date_time):
 
             try:
-
                 cur = self.conn.cursor()
-                cur.execute("INSERT INTO NewsLinks (linkCat,linkUrl,linkDate,articleTitle) VALUES ('{0}','{1}','{2}','{3}')".format(article_cat,link_url,pub_date,link_title))
+                cur.execute("INSERT INTO files (full_path,modify_date_time) VALUES ('{0}','{1}')".format(full_path,modify_date_time))
 
             except sqlite3.Error as err:
-                self.logger.log_op("There is an error in the db class inserting from insert_article().")
+                self.logger.log_op("There is an error in the db class inserting file info.")
                 self.logger.log_op(err)
 
             finally:
                 self.conn.commit()
                 cur.close()
+
+    def get_modified_dates(self, path):
+        cur = self.conn.cursor()
+        cur.execute("SELECT modify_date_time FROM files where full_path = '{0}'".format(path))
+        rows = cur.fetchall()
+        return rows
+
+    def update_base_folder(self, subdir, path):
+        cur = self.conn.cursor()
+        cur.execute("UPDATE files set base_folder = '{0}' where full_path = '{1}'".format(subdir, path))
+        self.conn.commit()
+        cur.close()
+
+    def update_base_file_mod_time(self, path, new_stamp):
+        cur = self.conn.cursor()
+        cur.execute("UPDATE files set modify_date_time = '{0}' where full_path = '{1}'".format(new_stamp, path))
+        self.conn.commit()
+        cur.close()
+
+    #check for the existence of 
+    def check_for_file(self, path):
+        cur = self.conn.cursor()
+        cur.execute("SELECT full_path FROM files where full_path = '{0}'".format(path))
+        rows = cur.fetchall()
+        return rows
