@@ -51,6 +51,8 @@ class Db(object):
         cur = self.conn.cursor()
         cur.execute("SELECT modify_date_time FROM files where full_path = '{0}'".format(path))
         rows = cur.fetchall()
+        if rows == None:
+            rows = "None"
         return rows
 
     def update_base_folder(self, subdir, path):

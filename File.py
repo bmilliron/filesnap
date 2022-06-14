@@ -34,13 +34,19 @@ class File(object):
         self.logger = Util()
         self.config = configparser.ConfigParser()
         self.config.read('filesnap.cfg')
-        self.paths = config['path_config']
+        self.paths = self.config['path_config']
         self.backupdest_path = self.paths['backup_base_dir']
 
-    def backup_file(self, folder, path):
+    def backup_file(self, path):
+        backup_folder_path = self.backupdest_path
         backup_folder_name = datetime.datetime.now().strftime("%b_%d_%Y_%H_%M_%S")
+        file_name = path.rsplit('/', 1)[-1]
+        full_backup_folder = f"{backup_folder_name}\{file_name}"
+        source_folder = path
+        print(f"source_folder: {source_folder}")
+        print(f"full_backup_folder: {full_backup_folder}")
         try:
-            shutil.copy(path, backup_folder_name)
+            shutil.copy(source_folder, full_backup_folder)
         except:
             print("Something went wrong with the copy.")
         #Check for the folder
