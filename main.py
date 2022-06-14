@@ -81,7 +81,7 @@ for subdir, dirs, files in os.walk(base_url):
         print(repr(baseline_stamp))
         print(repr(dt_m_3))
         if baseline_stamp[0][0] == dt_m_3 and baseline_stamp is not None:
-            print("Not Changed")  
+            print("Not Changed") 
         else:
             print("Changed")
             if root_dir_count == 0:

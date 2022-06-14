@@ -19,6 +19,7 @@ import os
 import configparser
 import datetime
 import shutil
+from Db import Db
 from Util import Util
 from time import gmtime, strftime
 
@@ -38,17 +39,35 @@ class File(object):
         self.backupdest_path = self.paths['backup_base_dir']
 
     def backup_file(self, path):
+        db_worker = Db()
+        file_id = db_worker.get_file_id(path)
         backup_folder_path = self.backupdest_path
         backup_folder_name = datetime.datetime.now().strftime("%b_%d_%Y_%H_%M_%S")
-        file_name = path.rsplit('/', 1)[-1]
-        full_backup_folder = f"{backup_folder_name}\{file_name}"
+        file_name = os.path.basename(path)
+        full_backup_folder = f"{backup_folder_path}\{backup_folder_name}\{file_id[0][0]}_{file_name}"
         source_folder = path
         print(f"source_folder: {source_folder}")
         print(f"full_backup_folder: {full_backup_folder}")
+        #Test that the folder exists
+        try:
+            is_file = os.path.isfile(f"{backup_folder_path}\{backup_folder_name}") 
+            if is_file:
+                pass
+            else:
+                os.mkdir(f"{backup_folder_path}\{backup_folder_name}")
+
+        except Exception as e:
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(exc_type, fname, exc_tb.tb_lineno)
+
         try:
             shutil.copy(source_folder, full_backup_folder)
-        except:
-            print("Something went wrong with the copy.")
+
+        except Exception as e:
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(exc_type, fname, exc_tb.tb_lineno)
         #Check for the folder
         #create the folder
         # DO THIS shutil.copy2('/src/dir/file.ext', '/dst/dir/newname.ext') # complete target filename given

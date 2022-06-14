@@ -55,6 +55,14 @@ class Db(object):
             rows = "None"
         return rows
 
+    def get_file_id(self, path):
+        cur = self.conn.cursor()
+        cur.execute("SELECT id FROM files where full_path = '{0}'".format(path))
+        rows = cur.fetchall()
+        if rows == None:
+            rows = "None"
+        return rows
+
     def update_base_folder(self, subdir, path):
         cur = self.conn.cursor()
         cur.execute("UPDATE files set base_folder = '{0}' where full_path = '{1}'".format(subdir, path))
