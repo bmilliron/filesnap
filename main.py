@@ -17,6 +17,7 @@ You can email inquiries to sapadian@protonmail.com
 import os, configparser, sys
 from datetime import datetime
 from tempfile import TemporaryFile
+from Util import Util
 from Db import Db
 from File import File
 
@@ -33,6 +34,7 @@ base_url = paths['base_dir']
 #instances
 db_worker = Db()
 file_worker = File()
+util_worker = Util()
 
 for subdir, dirs, files in os.walk(base_url):
     root_dir_count = 0
@@ -60,15 +62,20 @@ for subdir, dirs, files in os.walk(base_url):
                 pass
                 print(f"file_check: {file_check}")
                 print(f"f: {f}")
+                util_worker.log_op(f"Checking for file...file exists. Moving on.")
+
             else:
                 print(f"file_check: {file_check}")
                 print(f"f: {f}")
                 db_worker.insert_file_info(f, dt_m_2)
                 baseline_stamp = db_worker.get_modified_dates(f)
+                util_worker.log_op(f"Inserting the file information into the database.")
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             print(exc_type, fname, exc_tb.tb_lineno)
+            util_worker.log_op(f"There was an error during the file check. See following error:")
+            util_worker.log_op(f"{exc_type}{fname}{exc_tb.tb_lineno}")
         #Confirm
         #print(os.path.join(subdir, file))
         #print(f"Current: {dt_m}")
@@ -92,11 +99,12 @@ for subdir, dirs, files in os.walk(base_url):
                     root_dir_count = 1
                     db_worker.update_base_file_mod_time(f, dt_m)
                     file_worker.backup_file(f)
-
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
                     print(exc_type, fname, exc_tb.tb_lineno)
+                    util_worker.log_op(f"There was an error updating the modified date time.  The error is below:")
+                    util_worker.log_op(f"{exc_type}{fname}{exc_tb.tb_lineno}")
             
             
 

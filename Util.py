@@ -29,6 +29,11 @@ class Util(object):
         '''
         Constructor
         '''
+        self.logger = Util()
+        self.config = configparser.ConfigParser()
+        self.config.read('filesnap.cfg')
+        self.settings = self.config['settings']
+        self.log_dir = self.paths['log_file_path']
 
     def get_url(self, feed_name):
         config = configparser.ConfigParser()
@@ -40,9 +45,8 @@ class Util(object):
     def log_op(self, msg):
         ts = time.time()
         st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-        config = configparser.ConfigParser()
-        config.read('app.cfg')
-        log_file_path = config['app options']['log_file_location']
+    
+        log_file_path = self.log_dir
         log_file = open(log_file_path, 'a')
         log_file.write("{0}{1}".format(st, "\n"))
         log_file.write("{0}{1}".format(msg, "\n"))
