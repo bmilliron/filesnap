@@ -29,11 +29,9 @@ class Util(object):
         '''
         Constructor
         '''
-        self.logger = Util()
         self.config = configparser.ConfigParser()
         self.config.read('filesnap.cfg')
-        self.settings = self.config['settings']
-        self.log_dir = self.paths['log_file_path']
+        self.log_dir = self.config['settings']['log_file_path']
 
     def get_url(self, feed_name):
         config = configparser.ConfigParser()

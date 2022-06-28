@@ -63,13 +63,14 @@ for subdir, dirs, files in os.walk(base_url):
                 print(f"file_check: {file_check}")
                 print(f"f: {f}")
                 util_worker.log_op(f"Checking for file...file exists. Moving on.")
-
+                util_worker.log_op(f"File name is: {f}")
             else:
                 print(f"file_check: {file_check}")
                 print(f"f: {f}")
                 db_worker.insert_file_info(f, dt_m_2)
                 baseline_stamp = db_worker.get_modified_dates(f)
                 util_worker.log_op(f"Inserting the file information into the database.")
+                util_worker.log_op(f"File name is: {f}")
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
             fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -99,6 +100,8 @@ for subdir, dirs, files in os.walk(base_url):
                     root_dir_count = 1
                     db_worker.update_base_file_mod_time(f, dt_m)
                     file_worker.backup_file(f)
+                    util_worker.log_op(f"Backing up the file...")
+                    util_worker.log_op(f"File name is: {f}")
                 except Exception as e:
                     exc_type, exc_obj, exc_tb = sys.exc_info()
                     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
