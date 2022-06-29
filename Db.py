@@ -19,6 +19,7 @@ import os
 import sqlite3
 from Util import Util
 from time import gmtime, strftime
+from pathlib import Path
 
 
 class Db(object):
@@ -29,7 +30,8 @@ class Db(object):
         '''
         Constructor
         '''
-        self.conn = sqlite3.connect('filesnap.db')
+        self.script_path = Path(__file__, '..').resolve()
+        self.conn = sqlite3.connect(self.script_path.joinpath('filesnap.db'))
         self.logger = Util()
 
 

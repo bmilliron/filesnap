@@ -20,13 +20,15 @@ from tempfile import TemporaryFile
 from Util import Util
 from Db import Db
 from File import File
+from pathlib import Path
 
 #Params
 root_dir_count = 0
 
 #get config
+script_path = Path(__file__, '..').resolve()
 config = configparser.ConfigParser()
-config.read('filesnap.cfg')
+config.read(script_path.joinpath('filesnap.cfg'))
 paths = config['path_config']
 settings = config['settings']
 base_url = paths['base_dir']

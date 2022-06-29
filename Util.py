@@ -19,10 +19,11 @@ import os
 import configparser
 import time
 import datetime
+from pathlib import Path
 
 class Util(object):
     '''
-        Performs misc. utility operation
+    Performs misc. utility operation
     '''
 
     def __init__(self):
@@ -30,7 +31,8 @@ class Util(object):
         Constructor
         '''
         self.config = configparser.ConfigParser()
-        self.config.read('filesnap.cfg')
+        self.script_path = Path(__file__, '..').resolve()
+        self.config.read(self.script_path.joinpath('filesnap.cfg'))
         self.log_dir = self.config['settings']['log_file_path']
 
     def get_url(self, feed_name):

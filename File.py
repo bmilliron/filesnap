@@ -22,6 +22,7 @@ import shutil
 from Db import Db
 from Util import Util
 from time import gmtime, strftime
+from pathlib import Path
 
 
 class File(object):
@@ -33,8 +34,9 @@ class File(object):
         Constructor
         '''
         self.logger = Util()
+        self.script_path = Path(__file__, '..').resolve()
         self.config = configparser.ConfigParser()
-        self.config.read('filesnap.cfg')
+        self.config.read(self.script_path.joinpath('filesnap.cfg'))
         self.paths = self.config['path_config']
         self.backupdest_path = self.paths['backup_base_dir']
 
